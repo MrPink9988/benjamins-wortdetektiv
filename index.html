@@ -1,40 +1,125 @@
 <!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#f6f7fb"><title>Benjamins Wortdetektiv</title><style>
 :root{font-family:ui-rounded,system-ui,-apple-system,'Segoe UI',sans-serif;color:#1c2741;background:#f6f7fb}*{box-sizing:border-box}body{margin:0}main{max-width:780px;margin:auto;padding:22px 16px 70px}.top{display:flex;align-items:center;justify-content:space-between;gap:12px}.logo{font-weight:900;font-size:clamp(23px,5vw,34px);letter-spacing:-1px}.sub{color:#65718b;margin:5px 0 0}.pill{background:#fff;border:1px solid #e0e5ef;border-radius:30px;padding:10px 14px;font-weight:800;white-space:nowrap}.card{background:white;border:1px solid #e6eaf2;box-shadow:0 12px 35px #2836560b;border-radius:24px;padding:clamp(18px,4vw,30px);margin-top:20px}.eyebrow{font-size:12px;text-transform:uppercase;letter-spacing:1.6px;font-weight:900;color:#5d65bb}h1{font-size:clamp(23px,4.5vw,31px);margin:8px 0}p{line-height:1.6}.story{display:flex;flex-wrap:wrap;column-gap:7px;row-gap:11px;font-size:clamp(20px,3.8vw,26px);line-height:1.65;margin:25px 0}.word{font:inherit;line-height:1.3;cursor:pointer;background:#f1f4fa;border:2px solid transparent;border-radius:9px;padding:5px 6px;color:#26334d;touch-action:manipulation}.word:focus-visible,button:focus-visible{outline:3px solid #7b80e8;outline-offset:2px}.word.chosen{background:#dedcff;border-color:#8176dd}.word.good{background:#d6f5e4;border-color:#36a56e}.word.bad{background:#ffe0df;border-color:#e65d60}.word.missed{background:#fff0bd;border-color:#e9a92c}.word.neutral{background:#f1f4fa;border-color:transparent}.word:disabled{opacity:1;cursor:default}.score-banner{background:#eef1ff;border:1px solid #dce1fa;border-radius:17px;padding:16px;margin:16px 0}.score-banner strong{font-size:22px}.review-title{font-size:17px;font-weight:850;margin:18px 0 4px}.legend-item{display:inline-flex;align-items:center;gap:5px}.result[hidden]{display:none!important}.controls{display:flex;flex-wrap:wrap;gap:10px}.action{border:0;border-radius:13px;background:#5858cc;color:#fff;font-size:16px;font-weight:800;padding:14px 18px;min-height:48px;cursor:pointer}.action.secondary{background:#eef0ff;color:#4142a6}.action.ghost{background:#edf0f5;color:#36415c}.action:disabled{opacity:.5;cursor:default}.help{font-size:14px;color:#64708a}.result{background:#f4f6ff;border-radius:18px;padding:18px;margin-top:18px}.result h2{margin:0 0 8px;font-size:21px}.corrected{font-size:20px;line-height:1.8;background:white;border-radius:13px;padding:16px;user-select:text}.legend{display:flex;gap:12px;flex-wrap:wrap;font-size:13px;margin-top:10px}.dot{width:11px;height:11px;border-radius:50%;display:inline-block;margin-right:5px}.writing{background:#fff;border-radius:12px;padding:12px 16px;margin-top:12px}.line{border-bottom:1px solid #cbd4e5;height:34px}.small{font-size:13px;color:#67738c}footer{text-align:center;margin-top:25px;color:#8790a3;font-size:13px}@media(max-width:450px){.pill{font-size:13px;padding:9px}.action{flex:1}.story{column-gap:5px}}
-</style></head><body><main><div class="top"><div><div class="logo">🔎 Benjamins Wortdetektiv</div><p class="sub">Lesen · Großschreibung entdecken · Abschreiben</p></div><div class="pill">⭐ <span id="total">0</span> Punkte</div></div><section class="card"><div class="eyebrow" id="counter">Geschichte 1</div><h1 id="title"></h1><p>👀 Lies die Geschichte laut vor. Tippe dann auf <strong>jedes Wort, das einen großen Anfangsbuchstaben braucht.</strong></p><div id="story" class="story" aria-label="Wörter der Geschichte"></div><div id="feedback" hidden aria-live="polite"></div><div class="controls"><button class="action" id="check">Antwort prüfen ✓</button><button class="action secondary" id="next">🎲 Neue Geschichte</button><button class="action ghost" id="reset">↻ Nochmal</button></div><p class="help">Tipp: Du kannst Wörter durch erneutes Tippen wieder abwählen.</p><div id="result" hidden></div></section><footer>Mit Spaß Deutsch üben – ganz ohne Anmeldung. Funktioniert auch offline.</footer></main><script>
+</style></head><body><main><div class="top"><div><div class="logo">🔎 Benjamins Wortdetektiv</div><p class="sub">Lesen · Großschreibung entdecken · Abschreiben</p></div><div class="pill">⭐ <span id="total">0</span> Punkte</div></div><section class="card"><div class="eyebrow" id="counter">Geschichte 1</div><h1 id="title"></h1><p>👀 Lies die Geschichte laut vor. Tippe dann auf <strong>jedes Wort, das einen großen Anfangsbuchstaben braucht.</strong></p><div id="story" class="story" aria-label="Wörter der Geschichte"></div><div id="feedback" hidden aria-live="polite"></div><div class="controls"><button class="action" id="check">Antwort prüfen ✓</button><button class="action secondary" id="next">🎲 Neue Geschichte</button><button class="action ghost" id="reset">↻ Nochmal</button></div><p class="help">Tipp: Du kannst Wörter durch erneutes Tippen wieder abwählen.</p><div id="result" hidden></div></section><footer><div><strong>Version 4.1 · Zufällige Geschichten</strong></div>Mit Spaß Deutsch üben – ganz ohne Anmeldung. Funktioniert auch offline.</footer></main><script>
 const authored=[
-{title:'Die Kissenburg',answer:'Am Samstag baut Benjamin mit seinem Bruder eine riesige Burg aus Kissen und Decken. Plötzlich springt eine Katze auf das Sofa und wirft die Burg um.'},
-{title:'Der verschwundene Kuchen',answer:'Am Sonntag backt Oma einen Schokoladenkuchen. Benjamin stellt ihn auf den Tisch. Doch dann schnappt sich der Hund ein großes Stück.'},
-{title:'Das Fußballspiel',answer:'Auf dem Sportplatz wartet die Mannschaft auf den Anpfiff. Der Torwart zieht seine Handschuhe an. Plötzlich fliegt ein Ball über den Zaun.'},
-{title:'Ein seltsamer Fund',answer:'Im Wald entdeckt Benjamin eine kleine Tür unter einem Baum. Hinter der Tür liegt ein Brief. Darin steht eine Nachricht über einen verborgenen Schatz.'},
-{title:'Der Roboter im Keller',answer:'Nach der Schule findet Benjamin einen kleinen Roboter im Keller. Auf seinem Kopf blinkt ein grünes Licht. Gemeinsam suchen sie nach einer geheimen Batterie.'},
-{title:'Die Reise zum Mond',answer:'In der Nacht startet ein Astronaut mit seiner Rakete. Auf dem Mond entdeckt er einen glitzernden Stein. Er steckt den Stein vorsichtig in seine Tasche.'},
-{title:'Das Gespenst im Schrank',answer:'Am Abend hört Mia ein leises Geräusch im Schlafzimmer. Hinter der Tür sitzt ein weißes Gespenst. Es sucht nur seinen verlorenen Schuh.'},
-{title:'Der Schatz am See',answer:'An einem warmen Tag finden die Kinder eine alte Karte am See. Unter einer großen Eiche liegt eine kleine Kiste. Darin versteckt sich ein silberner Schlüssel.'},
-{title:'Der Drache auf dem Dach',answer:'Am Morgen landet ein kleiner Drache auf dem Dach. Seine Flügel sind blau und seine Nase ist rot. Benjamin bringt ihm einen Eimer Wasser.'},
-{title:'Der verrückte Zoo',answer:'Im Zoo trägt ein Affe einen gelben Hut. Neben dem Gehege steht ein erstaunter Wärter. Die Besucher lachen über den lustigen Anblick.'},
-{title:'Das geheime Baumhaus',answer:'Hinter dem Garten steht ein altes Baumhaus. Benjamin und sein Freund klettern die Leiter hinauf. Oben entdecken sie ein Buch mit geheimen Zeichen.'},
-{title:'Die magische Schultasche',answer:'Vor dem Unterricht öffnet Lina ihre Schultasche. Ein kleiner Frosch springt zwischen den Heften hervor. Die Lehrerin staunt über den ungewöhnlichen Gast.'}
+ {
+  "title": "Die Kissenburg",
+  "answer": "Am Samstag baut Benjamin mit seinem Bruder eine riesige Burg aus Kissen und Decken. Plötzlich springt die Katze auf das Sofa und wirft einen Turm um. Die beiden Baumeister müssen laut lachen. Danach bauen sie einen geheimen Eingang für die Katze."
+ },
+ {
+  "title": "Der verschwundene Kuchen",
+  "answer": "Oma stellt einen frischen Schokoladenkuchen auf den Küchentisch. Als Benjamin zurückkommt, fehlt ein großes Stück. Auf dem Boden entdeckt er kleine Krümel. Der Hund liegt zufrieden unter dem Tisch und verrät sich mit seiner braunen Schnauze."
+ },
+ {
+  "title": "Das spannende Fußballspiel",
+  "answer": "Auf dem Sportplatz wartet die Mannschaft auf den Anpfiff. Der Torwart zieht seine Handschuhe an und prüft das Netz. Kurz vor dem Ende steht es unentschieden. Dann hält er einen schwierigen Ball und rettet seiner Mannschaft den Punkt."
+ },
+ {
+  "title": "Die Tür im Wald",
+  "answer": "Im Wald entdeckt Benjamin eine winzige Tür zwischen zwei Wurzeln. Hinter der Tür leuchtet ein warmes Licht. Ein kleiner Igel öffnet vorsichtig und lädt ihn zum Tee ein. Benjamin staunt über die winzigen Tassen auf dem Tisch."
+ },
+ {
+  "title": "Der Roboter im Keller",
+  "answer": "Nach der Schule findet Benjamin einen kleinen Roboter im Keller. Auf seinem Kopf blinkt ein grünes Licht. Der Roboter sucht verzweifelt seine Batterie. Gemeinsam entdecken sie das fehlende Teil hinter einem alten Karton."
+ },
+ {
+  "title": "Die Reise zum Mond",
+  "answer": "In der Nacht startet eine Astronautin mit ihrer Rakete. Auf dem Mond entdeckt sie seltsame Spuren im Staub. Die Spuren führen zu einem kleinen Krater. Dort liegt kein Schatz, sondern ein verlorener Handschuh."
+ },
+ {
+  "title": "Das Gespenst im Schrank",
+  "answer": "Am Abend hört Mia ein leises Geräusch aus ihrem Schrank. Hinter den Jacken sitzt ein winziges Gespenst mit einer roten Mütze. Es hat seinen linken Schuh verloren. Gemeinsam suchen sie unter dem Bett und finden sogar zwei Schuhe."
+ },
+ {
+  "title": "Der Schatz am See",
+  "answer": "An einem warmen Tag finden die Kinder eine alte Karte am See. Unter einer großen Eiche entdecken sie eine kleine Kiste. Darin liegen ein silberner Schlüssel und ein Brief. Der Brief verrät den Weg zu einer geheimen Höhle."
+ },
+ {
+  "title": "Der Drache auf dem Dach",
+  "answer": "Am Morgen landet ein kleiner Drache auf dem Dach. Seine Flügel sind blau und seine Nase ist rot. Benjamin bringt ihm einen Eimer Wasser. Der Drache trinkt einen Schluck und pustet danach eine riesige Seifenblase."
+ },
+ {
+  "title": "Der verrückte Zoo",
+  "answer": "Im Zoo trägt ein Affe einen gelben Hut. Neben dem Gehege steht ein erstaunter Wärter. Der Affe hat den Hut aus einem offenen Rucksack gestohlen. Nach einem lustigen Tausch gegen eine Banane bekommt der Besucher ihn zurück."
+ },
+ {
+  "title": "Das geheime Baumhaus",
+  "answer": "Hinter dem Garten steht ein altes Baumhaus. Benjamin und sein Freund klettern die Leiter hinauf. Oben entdecken sie ein Buch mit geheimen Zeichen. Auf der letzten Seite wartet eine Einladung zu einer Schatzsuche."
+ },
+ {
+  "title": "Die magische Schultasche",
+  "answer": "Vor dem Unterricht öffnet Lina ihre Schultasche. Ein kleiner Frosch springt zwischen den Heften hervor. Die Lehrerin staunt über den ungewöhnlichen Gast. Gemeinsam bringen die Kinder den Frosch zum Teich hinter der Schule."
+ },
+ {
+  "title": "Das Rätsel im Museum",
+  "answer": "Im Museum entdeckt eine Klasse ein Gemälde mit einem seltsamen Zeichen. Benjamin findet dasselbe Zeichen auf einer alten Truhe. Der Museumsführer öffnet die Truhe mit einem kleinen Schlüssel. Darin liegt ein Brief aus einer anderen Zeit."
+ },
+ {
+  "title": "Die geheimnisvolle Nachricht",
+  "answer": "Auf dem Küchentisch liegt ein Umschlag ohne Namen. Benjamin öffnet ihn und findet eine Karte mit drei Pfeilen. Die Pfeile führen ihn durch den Garten. Hinter dem Apfelbaum wartet seine Familie mit einer Überraschung."
+ },
+ {
+  "title": "Ein Rennen im Regen",
+  "answer": "Am Nachmittag beginnt ein heftiger Regen. Zwei Freunde wollen trotzdem ein Rennen mit ihren Papierbooten machen. Im Bach schwimmen die Boote um die Wette. Das kleinste Boot erreicht als Erstes die Brücke."
+ },
+ {
+  "title": "Die Pizza mit Überraschung",
+  "answer": "Am Freitag backen die Kinder gemeinsam eine Pizza. Benjamin legt Tomaten und Käse auf den Teig. Sein Bruder versteckt eine einzelne Ananas in der Mitte. Beim Abendessen beginnt eine lustige Diskussion über den besten Belag."
+ },
+ {
+  "title": "Der Ausflug zum Meer",
+  "answer": "Am Strand sammelt Mila schöne Muscheln in einem Eimer. Zwischen den Steinen entdeckt sie eine winzige Krabbe. Vorsichtig setzt sie das Tier zurück ins Wasser. Danach baut sie mit ihrem Vater einen hohen Sandturm."
+ },
+ {
+  "title": "Die verschwundene Socke",
+  "answer": "Nach dem Waschen fehlt plötzlich eine blaue Socke. Benjamin schaut unter das Bett und hinter die Kommode. Im Wohnzimmer findet er eine verdächtige Spur. Der Hund hat die Socke als Spielzeug in seinen Korb getragen."
+ },
+ {
+  "title": "Die Bibliothek bei Nacht",
+  "answer": "In der Bibliothek fällt kurz vor Feierabend das Licht aus. Zwischen den Regalen hört die Bibliothekarin ein leises Rascheln. Hinter einem dicken Buch sitzt eine kleine Maus. Sie hat aus Papier ein gemütliches Nest gebaut."
+ },
+ {
+  "title": "Das Fahrradabenteuer",
+  "answer": "Benjamin fährt mit seinem Freund durch den Park. An einer Kreuzung entdecken sie ein Schild mit einem Fahrradzeichen. Der Weg führt zu einem versteckten Spielplatz. Dort machen sie eine Pause und teilen sich einen Apfel."
+ },
+ {
+  "title": "Der große Schneemann",
+  "answer": "In der Nacht fällt der erste Schnee auf die Dächer. Am Morgen rollen die Kinder drei große Kugeln im Garten. Der Schneemann bekommt eine Karotte und einen alten Schal. Als die Sonne erscheint, bauen sie ihm schnell einen Schattenschirm."
+ },
+ {
+  "title": "Der geheimnisvolle Fahrstuhl",
+  "answer": "In einem alten Haus entdeckt Lina einen Fahrstuhl mit einem goldenen Knopf. Sie drückt vorsichtig darauf und hört ein leises Klingeln. Die Tür öffnet sich zu einem Raum voller Pflanzen. Ein freundlicher Gärtner erklärt ihr das Geheimnis."
+ },
+ {
+  "title": "Das Konzert im Wohnzimmer",
+  "answer": "Am Sonntag üben drei Kinder für ein kleines Konzert. Benjamin spielt auf der Trommel und sein Bruder singt ein Lied. Plötzlich beginnt die Katze laut zu miauen. Die Familie lacht und nennt sie die neue Sängerin."
+ },
+ {
+  "title": "Ein Brief aus Costa Rica",
+  "answer": "Benjamin findet in seiner Schublade eine Postkarte aus Costa Rica. Auf dem Bild sieht er einen bunten Vogel im Regenwald. Er erzählt seinem Freund von den Tieren und den warmen Tagen. Danach schreiben die beiden eine Antwort an seine alte Klasse."
+ }
 ];
-const starts=[
-['Am Montag','im Garten'],['Am Dienstag','auf dem Spielplatz'],['Am Mittwoch','in der Schule'],['Am Donnerstag','am See'],['Am Freitag','im Wald'],['Am Samstag','auf dem Dachboden'],['Am Sonntag','im Park']
+const locations=['im Stadtpark','auf dem Dachboden','am Fluss','hinter der Turnhalle','im Garten','auf dem Schulhof','im Wald'];
+const people=['Benjamin','Lina','Mila','Oskar','ein neugieriger Junge','eine mutige Freundin'];
+const objects=['eine alte Karte','einen bunten Schlüssel','eine geheimnisvolle Schachtel','einen verlorenen Rucksack','ein kleines Fernglas'];
+const twists=[
+ ['Plötzlich ertönt ein leises Klingeln. Hinter einem Baum wartet ein freundlicher Hund. Er führt alle zu einer versteckten Bank. Dort liegt eine Nachricht für die Finder.','Die überraschende Entdeckung'],
+ ['Auf einmal zieht ein kräftiger Wind auf. Ein Blatt Papier fliegt über den Weg. Die Kinder laufen hinterher und finden einen geheimen Hinweis. Am Ende müssen sie über ihren lustigen Umweg lachen.','Der fliegende Hinweis'],
+ ['Neben einer Mauer entdecken die Kinder frische Fußspuren. Vorsichtig folgen sie den Spuren bis zu einer kleinen Hütte. Dort wartet ein Nachbar mit einer spannenden Geschichte. Gemeinsam lösen sie das Rätsel.','Die rätselhaften Spuren'],
+ ['Aus einem Gebüsch kommt ein merkwürdiges Geräusch. Alle bleiben stehen und lauschen aufmerksam. Dann hüpft ein Kaninchen mit einer grünen Schleife hervor. Die Freunde bringen es sicher nach Hause.','Das Kaninchen mit der Schleife']
 ];
-const heroes=['Benjamin','Mila','Oskar','Lina','ein kleiner Drache','ein frecher Hund','eine neugierige Katze'];
-const treasures=['eine geheimnisvolle Kiste','einen goldenen Schlüssel','einen bunten Ball','einen alten Rucksack','eine kleine Schatzkarte','einen lustigen Hut','ein glitzerndes Buch'];
-const endings=[
-'Plötzlich beginnt ein lustiges Abenteuer. Alle Freunde laufen neugierig herbei.',
-'Danach erzählen die Kinder die Geschichte zu Hause. Ihre Eltern können es kaum glauben.',
-'Am Ende lachen alle über die Überraschung. Sogar der Nachbar klatscht in die Hände.',
-'Kurz darauf kommt ein Freund und hilft bei der Suche. Gemeinsam lösen sie das Rätsel.',
-'Zum Glück hat niemand die gute Laune verloren. Der Tag bleibt allen lange in Erinnerung.'
-];
+function generated(){const place=pick(locations),hero=pick(people),object=pick(objects),twist=pick(twists);return {title:twist[1],answer:`Am Nachmittag entdeckt ${hero} ${object} ${place}. Die Entdeckung macht alle sehr neugierig. ${twist[0]}`}}
 let round=0,total=0,chosen=new Set(),current=null,checked=false,lastKey='',used=new Set();
+let storyOrder=[];
+function shuffleStories(){storyOrder=Array.from({length:authored.length},(_,i)=>i);for(let i=storyOrder.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[storyOrder[i],storyOrder[j]]=[storyOrder[j],storyOrder[i]];}}
+shuffleStories();
 const $=id=>document.getElementById(id);
 const pick=a=>a[Math.floor(Math.random()*a.length)];
 function generated(){const [day,place]=pick(starts),hero=pick(heroes),treasure=pick(treasures),ending=pick(endings);const answer=`${day} findet ${hero} ${treasure} ${place}. ${ending}`;return {title:'Das Abenteuer von '+(hero[0].toUpperCase()+hero.slice(1)),answer}}
 function prepare(item){return {...item,text:item.answer.replace(/\p{L}+/gu,w=>w.toLocaleLowerCase('de-DE'))}}
 function tokenize(s){return s.match(/[^\s]+/g)||[]}
-function build(){let candidate; if(round<authored.length){candidate=prepare(authored[round]);}else{let tries=0;do{candidate=prepare(generated());tries++}while(used.has(candidate.answer)&&tries<100);}used.add(candidate.answer);lastKey=candidate.answer;return candidate}
-function load(next=true){if(next)round++;current=build();chosen=new Set();checked=false;$('counter').textContent=`Geschichte ${round+1}`;$('title').textContent=current.title;$('result').hidden=true;$('result').innerHTML='';$('feedback').hidden=true;$('feedback').innerHTML='';$('check').disabled=false;render()}
+function build(){let candidate; if(round<authored.length){candidate=prepare(authored[storyOrder[round]]);}else{let tries=0;do{candidate=prepare(generated());tries++}while(used.has(candidate.answer)&&tries<100);}used.add(candidate.answer);lastKey=candidate.answer;return candidate}
+function load(next=true){if(next)round++;current=build();chosen=new Set();checked=false;$('counter').textContent=`Geschichte ${round+1} · Version 4.1`;$('title').textContent=current.title;$('result').hidden=true;$('result').innerHTML='';$('feedback').hidden=true;$('feedback').innerHTML='';$('check').disabled=false;render()}
 function render(){const w=tokenize(current.text),a=tokenize(current.answer);if(w.length!==a.length){$('story').textContent='Geschichte konnte nicht geladen werden.';return}const box=$('story');box.replaceChildren();w.forEach((word,i)=>{const b=document.createElement('button');b.type='button';b.className='word';b.textContent=chosen.has(i)?a[i]:word;b.setAttribute('aria-pressed',chosen.has(i));const required=word!==a[i];if(checked){b.classList.add(required?(chosen.has(i)?'good':'missed'):(chosen.has(i)?'bad':'neutral'));b.textContent=required?a[i]:word;b.disabled=true;}else if(chosen.has(i))b.classList.add('chosen');b.addEventListener('click',()=>{if(checked)return;chosen.has(i)?chosen.delete(i):chosen.add(i);render()});box.append(b)})}
 $('check').addEventListener('click',()=>{
  if(checked)return;
@@ -42,7 +127,7 @@ $('check').addEventListener('click',()=>{
  const w=tokenize(current.text),a=tokenize(current.answer);
  let correct=0,needed=0,found=0,falsePositives=0;
  w.forEach((word,i)=>{const required=word!==a[i];if(required)needed++;if(required&&chosen.has(i))found++;if(!required&&chosen.has(i))falsePositives++;if(required===chosen.has(i))correct++});
- const points=Math.round(correct/w.length*100);
+ const points=Math.max(0,Math.round((found-falsePositives)/Math.max(1,needed)*100));
  total+=points;$('total').textContent=total;
  render();$('check').disabled=true;
  const feedback=$('feedback');feedback.hidden=false;feedback.replaceChildren();
